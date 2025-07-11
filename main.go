@@ -5,9 +5,13 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"glox/lox"
 )
 
 func main() {
+	lox.HadError = false
+
 	args := os.Args[1:]
 	fmt.Println(os.Args, args)
 
@@ -28,7 +32,12 @@ func runFile(filename string) error {
 		return err
 	}
 
-	return run(string(bytes))
+	run(string(bytes))
+
+	if lox.HadError {
+		os.Exit(65)
+	}
+	return nil
 }
 
 func runPrompt() error {
@@ -44,6 +53,7 @@ func runPrompt() error {
 		}
 
 		run(line)
+		lox.HadError = false
 	}
 
 	return nil
