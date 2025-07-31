@@ -13,7 +13,6 @@ func main() {
 	lox.HadError = false
 
 	args := os.Args[1:]
-	fmt.Println(os.Args, args)
 
 	if len(args) > 1 {
 		fmt.Println("Usage: jlox [script]")
@@ -37,6 +36,7 @@ func runFile(filename string) error {
 	if lox.HadError {
 		os.Exit(65)
 	}
+
 	return nil
 }
 
@@ -60,8 +60,7 @@ func runPrompt() error {
 }
 
 func run(source string) error {
-	tokens := strings.FieldsSeq(source)
-	// For now scan tokens by space delim.
+	tokens := strings.FieldsSeq(source) // For now scan tokens by space delim.
 
 	for token := range tokens {
 		fmt.Println(token)
