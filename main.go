@@ -4,9 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strings"
 
 	"glox/lox"
+	"glox/scanner"
 )
 
 func main() {
@@ -60,9 +60,12 @@ func runPrompt() error {
 }
 
 func run(source string) error {
-	tokens := strings.FieldsSeq(source) // For now scan tokens by space delim.
+	// tokens := strings.FieldsSeq(source) // For now scan tokens by space delim.
 
-	for token := range tokens {
+	scan := scanner.NewScanner(source)
+	tokens := scan.ScanTokens()
+
+	for _, token := range tokens {
 		fmt.Println(token)
 	}
 
