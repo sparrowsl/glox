@@ -97,6 +97,8 @@ func (sc *Scanner) scanToken() {
 		} else {
 			sc.addToken(token.SLASH, nil)
 		}
+	case '"':
+		sc.string()
 	case ' ':
 	case '\r':
 	case '\t':
@@ -138,4 +140,24 @@ func (sc *Scanner) peek() byte {
 	}
 
 	return sc.source[sc.current]
+}
+
+func (sc *Scanner) string() {
+	start := sc.current
+	for sc.peek() != '"' && !sc.isAtEnd() {
+		if sc.peek() == '\n' {
+			sc.line += 1
+		}
+
+		sc.advance()
+	}
+
+	if sc.isAtEnd() {
+		lox.Error(sc.line, "Unterminated string.")
+		return
+	}
+
+	sc.advance()
+	value := sc.source[start+1 : sc.current-1]
+	sc.addToken(token.STRING, value)
 }
