@@ -143,7 +143,6 @@ func (sc *Scanner) peek() byte {
 }
 
 func (sc *Scanner) string() {
-	start := sc.current
 	for sc.peek() != '"' && !sc.isAtEnd() {
 		if sc.peek() == '\n' {
 			sc.line += 1
@@ -158,6 +157,6 @@ func (sc *Scanner) string() {
 	}
 
 	sc.advance()
-	value := sc.source[start+1 : sc.current-1]
+	value := sc.source[sc.start+1 : sc.current-1]
 	sc.addToken(token.STRING, value)
 }
