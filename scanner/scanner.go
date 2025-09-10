@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"glox/lox"
 	"glox/token"
+	"strconv"
 )
 
 type Scanner struct {
@@ -106,7 +107,12 @@ func (sc *Scanner) scanToken() {
 	case '\n':
 		sc.line += 1
 	default:
-		lox.Error(sc.line, fmt.Sprintf("Unexpected character '%c'", char))
+		if isDigit(char) {
+			sc.number()
+		} else {
+
+			lox.Error(sc.line, fmt.Sprintf("Unexpected character '%c'", char))
+		}
 	}
 }
 
@@ -159,4 +165,34 @@ func (sc *Scanner) string() {
 	sc.advance()
 	value := sc.source[sc.start+1 : sc.current-1]
 	sc.addToken(token.STRING, value)
+}
+
+func isDigit(char byte) bool {
+	return char >= '0' && char <= '9'
+}
+
+func (sc *Scanner) number() {
+	for isDigit(sc.peek()) {
+		sc.advance()
+	}
+
+	if sc.peek() == '.' && isDigit(sc.peekNext()) {
+		sc.advance()
+
+		for isDigit(sc.peek()) {
+			sc.advance()
+		}
+	}
+
+	value, _ := strconv.ParseFloat(sc.source[sc.start:sc.current], 64)
+	sc.addToken(token.NUMBER, value)
+}
+
+func (sc Scanner) peekNext() byte {
+	if sc.current+1 >= len(sc.source) {
+		return 0
+	}
+
+	return sc.source[sc.current+1]
+
 }
