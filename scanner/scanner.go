@@ -114,6 +114,18 @@ func (sc *Scanner) scanToken() {
 			for sc.peek() != '\n' && !sc.isAtEnd() {
 				sc.advance()
 			}
+		} else if sc.match('*') {
+			for !sc.isAtEnd() {
+				if sc.peek() == '*' && sc.peekNext() == '/' {
+					sc.advance()
+					sc.advance()
+					return
+				}
+
+				sc.advance()
+			}
+			// If we got here, comment wasn’t closed
+			fmt.Println("Unterminated multi-line comment")
 		} else {
 			sc.addToken(token.SLASH, nil)
 		}

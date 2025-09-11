@@ -1,4 +1,8 @@
 // this is a comment
 (( )){} // grouping stuff
 !*+-/=<> <= == // operators
+/* 
+ multi-line 
+ comment 
+*/
 var language = "lox";
