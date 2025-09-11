@@ -15,6 +15,25 @@ type Scanner struct {
 	line    int
 }
 
+var keywords = map[string]token.TokenType{
+	"and":    token.AND,
+	"class":  token.CLASS,
+	"else":   token.ELSE,
+	"false":  token.FALSE,
+	"for":    token.FOR,
+	"fun":    token.FUN,
+	"if":     token.IF,
+	"nil":    token.NIL,
+	"or":     token.OR,
+	"print":  token.PRINT,
+	"return": token.RETURN,
+	"super":  token.SUPER,
+	"this":   token.THIS,
+	"true":   token.TRUE,
+	"var":    token.VAR,
+	"while":  token.WHILE,
+}
+
 func NewScanner(source string) Scanner {
 	scanner := Scanner{
 		source:  source,
@@ -204,7 +223,14 @@ func (sc *Scanner) identifier() {
 		sc.advance()
 	}
 
-	sc.addToken(token.IDENTIFIER, nil)
+	text := sc.source[sc.start:sc.current]
+	word, ok := keywords[text]
+
+	if !ok {
+		word = token.IDENTIFIER
+	}
+
+	sc.addToken(word, nil)
 }
 
 func isAlpha(char byte) bool {

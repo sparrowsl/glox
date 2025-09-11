@@ -60,8 +60,6 @@ func runPrompt() error {
 }
 
 func run(source string) error {
-	// tokens := strings.FieldsSeq(source) // For now scan tokens by space delim.
-
 	scan := scanner.NewScanner(source)
 	tokens := scan.ScanTokens()
 
