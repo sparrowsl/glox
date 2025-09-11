@@ -109,6 +109,8 @@ func (sc *Scanner) scanToken() {
 	default:
 		if isDigit(char) {
 			sc.number()
+		} else if isAlpha(char) {
+			sc.identifier()
 		} else {
 
 			lox.Error(sc.line, fmt.Sprintf("Unexpected character '%c'", char))
@@ -195,4 +197,20 @@ func (sc Scanner) peekNext() byte {
 
 	return sc.source[sc.current+1]
 
+}
+
+func (sc *Scanner) identifier() {
+	for isAlphaNumeric(sc.peek()) {
+		sc.advance()
+	}
+
+	sc.addToken(token.IDENTIFIER, nil)
+}
+
+func isAlpha(char byte) bool {
+	return (char >= 'a' && char <= 'z') || (char >= 'A' && char <= 'Z') || char == '_'
+}
+
+func isAlphaNumeric(char byte) bool {
+	return isAlpha(char) || isDigit(char)
 }
